@@ -1,7 +1,4 @@
 ---
-# Only run this on the first master
-host: masters[0]
-
 - name: Operate on multiple namespaces
   include_tasks: gather_namespaces.yml
   when: use_namespaces|string == 'all'
