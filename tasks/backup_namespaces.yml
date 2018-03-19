@@ -1,0 +1,20 @@
+---
+# Lets backup the namespaces
+# Based on the bash scripts provided at https://github.com/openshift/openshift-ansible-contrib/blob/master/reference-architecture/day2ops/scripts/project_export.sh
+
+- name: Ensure export directory exists
+  file: 
+    path: "{{ namespace_export_location }}"
+    state: directory
+    mode: 0755
+
+- name: Ensure the backup script is in place
+  copy: 
+    dest: "{{ namespace_export_location }}/namespace_export.sh"
+    src: "{{ role_path }}/files/project_export.sh"
+    state: directory
+    mode: 0755
+
+- name: Export projects
+  shell: "{{ namespace_export_location|lower }}/namespace_export.sh {{ item }}"
+  with_items: "{{ namespaces.stdout }}"

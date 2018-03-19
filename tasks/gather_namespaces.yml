@@ -1,0 +1,4 @@
+---
+- name: Gathering namespaces
+  shell: oc get namespaces | grep Active | awk '{ print $1 }'
+  register: namespaces
