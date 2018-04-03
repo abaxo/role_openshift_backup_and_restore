@@ -17,4 +17,4 @@
 
 - name: Export projects
   shell: "{{ namespace_export_location|lower }}/namespace_export.sh {{ item }}"
-  with_items: "{{ namespaces.stdout }}"
+  with_items: "{{ namespaces }}"

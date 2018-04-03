@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - OpenshiftBackupRestore
+    - role_osmo_backup_restore

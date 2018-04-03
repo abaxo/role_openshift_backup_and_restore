@@ -20,7 +20,7 @@ usage(){
 
 ns(){
   echo "Exporting namespace to ${PROJECT}/ns.json"
-  oc get --export -o=json ns/${PROJECT} | jq '
+  oc get --export -o=json ns/${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '
     del(.status,
       .metadata.uid,
       .metadata.selfLink,
@@ -32,7 +32,7 @@ ns(){
 
 rolebindings(){
   echo "Exporting rolebindings to ${PROJECT}/rolebindings.json"
-  oc get --export -o=json rolebindings -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json rolebindings -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }}| jq '.items[] |
   del(.metadata.uid,
       .metadata.selfLink,
       .metadata.resourceVersion,
@@ -42,7 +42,7 @@ rolebindings(){
 
 serviceaccounts(){
   echo "Exporting serviceaccounts to ${PROJECT}/serviceaccounts.json"
-  oc get --export -o=json serviceaccounts -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json serviceaccounts -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -52,7 +52,7 @@ serviceaccounts(){
 
 secrets(){
   echo "Exporting secrets to ${PROJECT}/secrets.json"
-  oc get --export -o=json secrets -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json secrets -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     select(.type!="kubernetes.io/service-account-token") |
     del(.metadata.uid,
         .metadata.selfLink,
@@ -66,7 +66,7 @@ dcs(){
   echo "Exporting deploymentconfigs to ${PROJECT}/dc_*.json"
   DCS=$(oc get dc -n ${PROJECT} -o jsonpath="{.items[*].metadata.name}")
   for dc in ${DCS}; do
-    oc get --export -o=json dc ${dc} -n ${PROJECT} | jq '
+    oc get --export -o=json dc ${dc} -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '
       del(.status,
           .metadata.uid,
           .metadata.selfLink,
@@ -88,7 +88,7 @@ dcs(){
 
 bcs(){
   echo "Exporting buildconfigs to ${PROJECT}/bcs.json"
-  oc get --export -o=json bc -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json bc -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -101,7 +101,7 @@ bcs(){
 
 builds(){
   echo "Exporting builds to ${PROJECT}/builds.json"
-  oc get --export -o=json builds -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json builds -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -113,7 +113,7 @@ builds(){
 
 is(){
   echo "Exporting imagestreams to ${PROJECT}/iss.json"
-  oc get --export -o=json is -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json is -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -126,7 +126,7 @@ is(){
 
 rcs(){
   echo "Exporting replicationcontrollers to ${PROJECT}/rcs.json"
-  oc get --export -o=json rc -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json rc -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -140,7 +140,7 @@ svcs(){
   echo "Exporting services to ${PROJECT}/svc_*.json"
   SVCS=$(oc get svc -n ${PROJECT} -o jsonpath="{.items[*].metadata.name}")
   for svc in ${SVCS}; do
-    oc get --export -o=json svc ${svc} -n ${PROJECT} | jq '
+    oc get --export -o=json svc ${svc} -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '
       del(.status,
             .metadata.uid,
             .metadata.selfLink,
@@ -150,7 +150,7 @@ svcs(){
             .spec.clusterIP
             )' > ${PROJECT}/svc_${svc}.json
     if [[ $(cat ${PROJECT}/svc_${svc}.json | jq -e '.spec.selector.app') == "null" ]]; then
-      oc get --export -o json endpoints ${svc} -n ${PROJECT}| jq '
+      oc get --export -o json endpoints ${svc} -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '
         del(.status,
             .metadata.uid,
             .metadata.selfLink,
@@ -164,7 +164,7 @@ svcs(){
 
 pods(){
   echo "Exporting pods to ${PROJECT}/pods.json"
-  oc get --export -o=json pod -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json pod -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -176,7 +176,7 @@ pods(){
 
 cms(){
   echo "Exporting configmaps to ${PROJECT}/cms.json"
-  oc get --export -o=json configmaps -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json configmaps -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -188,7 +188,7 @@ cms(){
 
 pvcs(){
   echo "Exporting pvcs to ${PROJECT}/pvcs.json"
-  oc get --export -o=json pvc -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json pvc -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -204,7 +204,7 @@ pvcs(){
 
 pvcs_attachment(){
   echo "Exporting pvcs (with attachment included data) to ${PROJECT}/pvcs_attachment.json"
-  oc get --export -o=json pvc -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json pvc -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -216,7 +216,7 @@ pvcs_attachment(){
 
 routes(){
   echo "Exporting routes to ${PROJECT}/routes.json"
-  oc get --export -o=json routes -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json routes -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -228,7 +228,7 @@ routes(){
 
 templates(){
   echo "Exporting templates to ${PROJECT}/templates.json"
-  oc get --export -o=json templates -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json templates -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.status,
         .metadata.uid,
         .metadata.selfLink,
@@ -240,7 +240,7 @@ templates(){
 
 egressnetworkpolicies(){
   echo "Exporting egressnetworkpolicies to ${PROJECT}/egressnetworkpolicies.json"
-  oc get --export -o=json egressnetworkpolicies -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json egressnetworkpolicies -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -250,7 +250,7 @@ egressnetworkpolicies(){
 
 imagestreamtags(){
   echo "Exporting imagestreamtags to ${PROJECT}/imagestreamtags.json"
-  oc get --export -o=json imagestreamtags -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json imagestreamtags -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -261,7 +261,7 @@ imagestreamtags(){
 
 rolebindingrestrictions(){
   echo "Exporting rolebindingrestrictions to ${PROJECT}/rolebindingrestrictions.json"
-  oc get --export -o=json rolebindingrestrictions -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json rolebindingrestrictions -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -271,7 +271,7 @@ rolebindingrestrictions(){
 
 limitranges(){
   echo "Exporting limitranges to ${PROJECT}/limitranges.json"
-  oc get --export -o=json limitranges -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json limitranges -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -281,7 +281,7 @@ limitranges(){
 
 resourcequotas(){
   echo "Exporting resourcequotas to ${PROJECT}/resourcequotas.json"
-  oc get --export -o=json resourcequotas -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json resourcequotas -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -292,7 +292,7 @@ resourcequotas(){
 
 podpreset(){
   echo "Exporting podpreset to ${PROJECT}/podpreset.json"
-  oc get --export -o=json podpreset -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json podpreset -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -302,7 +302,7 @@ podpreset(){
 
 cronjobs(){
   echo "Exporting cronjobs to ${PROJECT}/cronjobs.json"
-  oc get --export -o=json cronjobs -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json cronjobs -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -313,7 +313,7 @@ cronjobs(){
 
 statefulsets(){
   echo "Exporting statefulsets to ${PROJECT}/statefulsets.json"
-  oc get --export -o=json statefulsets -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json statefulsets -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -324,7 +324,7 @@ statefulsets(){
 
 hpas(){
   echo "Exporting hpas to ${PROJECT}/hpas.json"
-  oc get --export -o=json hpa -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json hpa -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -335,7 +335,7 @@ hpas(){
 
 deployments(){
   echo "Exporting deployments to ${PROJECT}/deployments.json"
-  oc get --export -o=json deploy -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json deploy -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -347,7 +347,7 @@ deployments(){
 
 replicasets(){
   echo "Exporting replicasets to ${PROJECT}/replicasets.json"
-  oc get --export -o=json replicasets -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json replicasets -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -360,7 +360,7 @@ replicasets(){
 
 poddisruptionbudget(){
   echo "Exporting poddisruptionbudget to ${PROJECT}/poddisruptionbudget.json"
-  oc get --export -o=json poddisruptionbudget -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json poddisruptionbudget -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,
@@ -372,7 +372,7 @@ poddisruptionbudget(){
 
 daemonset(){
   echo "Exporting daemonset to ${PROJECT}/daemonset.json"
-  oc get --export -o=json daemonset -n ${PROJECT} | jq '.items[] |
+  oc get --export -o=json daemonset -n ${PROJECT} --server={{ oc_host }} --token={{ oc_token }} | jq '.items[] |
     del(.metadata.uid,
         .metadata.selfLink,
         .metadata.resourceVersion,

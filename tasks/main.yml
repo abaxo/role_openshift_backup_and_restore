@@ -4,13 +4,13 @@
   when: use_namespaces|string == 'all'
 
 - name: Operate on single namespace
-  register: namespaces[0] = {{ use_namespaces|string|required() }}
+  register: namespaces.stdout = {{ use_namespaces|string|required() }}
   when: use_namespaces|string != 'all'
 
 - name: Backup namespaces
   include_tasks: backup_namespaces.yml
   when: backup_namespaces|bool == true
-  
+
 - name: Restore namespace contents
   include_tasks: restore_namespaces.yml
   when: restore_namespaces|bool == true

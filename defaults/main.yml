@@ -1,2 +1,22 @@
 ---
-# defaults file for OpenshiftBackupRestore
+# defaults file for role_osmo_test_framework
+
+#########
+# 00 Global
+#########
+
+# Token should be provided at runtime via -e oc_token=<token>
+oc_token:  false
+
+oc_host: https://openshift.sandpit.theosmo.com:8443
+
+##########
+# 01 Authentication Tests
+##########
+run_authentication_tests: true
+
+##########
+# 02 Build Tests
+##########
+run_build_tests: true
+build_tests_project_prefix: build-backup-osmo
