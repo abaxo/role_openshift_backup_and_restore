@@ -23,4 +23,4 @@
 - name: Export projects
   shell: "{{ export_path|lower }}/namespace_export.sh {{ item }}"
   with_items: "{{ namespaces.stdout_lines }}"
-  ignore_errors: true
+  ignore_errors: yes
