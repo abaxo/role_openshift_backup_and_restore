@@ -1,0 +1,18 @@
+---
+# Lets restore the namespaces
+# Based on the bash scripts provided at https://github.com/openshift/openshift-ansible-contrib/blob/master/reference-architecture/day2ops/scripts/project_import.sh
+
+- name: Ensure the restore script is in place
+  copy: 
+    dest: "{{ export_path }}/namespace_import.sh"
+    src: "{{ role_path }}/files/project_import.sh"
+    state: directory
+    mode: 0755
+
+- name: gather list of directories to restore
+  command: "ls -vD {{ export_path }}/*/"
+  register: recover_these_namespaces
+ 
+- name: Import projects
+  shell: "{{ export_path|lower }}/namespace_import.sh {{ export_path }}/{{ item }}"
+  with_items: "{{ recover_these_namespaces.stdout_lines }}"
