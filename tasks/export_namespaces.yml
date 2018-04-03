@@ -18,7 +18,6 @@
   copy: 
     dest: "{{ export_path }}/namespace_export.sh"
     src: "{{ role_path }}/files/project_export.sh"
-    state: directory
     mode: 0755
 
 - name: Export projects

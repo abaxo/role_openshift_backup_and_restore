@@ -6,7 +6,6 @@
   copy: 
     dest: "{{ export_path }}/namespace_import.sh"
     src: "{{ role_path }}/files/project_import.sh"
-    state: directory
     mode: 0755
 
 - name: gather list of directories to restore
