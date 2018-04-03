@@ -9,7 +9,7 @@
     mode: 0755
 
 - name: gather list of directories to restore
-  shell "ls -vd {{ export_path|lower }}/*/"
+  shell: "ls -vd {{ export_path|lower }}/*/"
   register: recover_these_namespaces
  
 - name: Import projects
