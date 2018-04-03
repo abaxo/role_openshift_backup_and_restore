@@ -2,6 +2,7 @@
 # vars file for OpenshiftBackupRestore
 export_path: "/opt/namespace-backups/{{ '%Y-%m-%d %H:%M:%S' | strftime(ansible_date_time.epoch) }}"
 use_namespaces: all
+clear_export_path: false
 export_exclude: 
   - openshift
   - openshift-infra
