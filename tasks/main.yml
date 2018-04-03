@@ -5,7 +5,7 @@
 
 - name: Operate on single namespace
   command: "echo {{ use_namespaces }}"
-  register: namespaces.stdout = {{ use_namespaces|string|required() }}
+  register: namespaces.stdout = {{ use_namespaces|string }}
   when: use_namespaces|string != 'all' and export_namespaces|bool == true
 
 - name: Export namespaces
