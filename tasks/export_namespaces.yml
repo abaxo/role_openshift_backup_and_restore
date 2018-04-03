@@ -5,23 +5,25 @@
 - name: Ensure export directory is removed
   file:
     state: absent
-    path: "{{ export_path }}/"
+    path: "{{ export_path|lower }}/"
   when: clear_export_path == true
 
 - name: Ensure export directory exists
   file: 
-    path: "{{ export_path }}"
+    path: "{{ export_path|lower }}"
     state: directory
     mode: 0755
 
 - name: Ensure the export script is in place
   copy: 
-    dest: "{{ export_path }}/namespace_export.sh"
+    dest: "{{ export_path|lower }}/namespace_export.sh"
     src: "{{ role_path }}/files/project_export.sh"
     mode: 0755
 
 - name: Export projects
-  shell: "{{ export_path|lower }}/namespace_export.sh {{ item }}"
+  shell: 
+    cmd: "{{ export_path|lower }}/namespace_export.sh {{ item }}"
+    chdir: "{{ export_path|lower }}"
   with_items: "{{ namespaces.stdout_lines }}"
   ignore_errors: yes
   when: item not in export_exclude

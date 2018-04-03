@@ -4,14 +4,16 @@
 
 - name: Ensure the restore script is in place
   copy: 
-    dest: "{{ export_path }}/namespace_import.sh"
+    dest: "{{ export_path|lower }}/namespace_import.sh"
     src: "{{ role_path }}/files/project_import.sh"
     mode: 0755
 
 - name: gather list of directories to restore
-  command: "ls -vD {{ export_path }}/*/"
+  command: "ls -vD {{ export_path|lower }}/*/"
   register: recover_these_namespaces
  
 - name: Import projects
-  shell: "{{ export_path|lower }}/namespace_import.sh {{ export_path }}/{{ item }}"
+  shell: 
+    cmd: "{{ export_path|lower }}/namespace_import.sh {{ export_path|lower }}/{{ item }}"
+    chdir: "{{ export_path|lower }}"
   with_items: "{{ recover_these_namespaces.stdout_lines }}"
