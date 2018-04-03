@@ -1,16 +1,16 @@
 ---
 - name: Operate on multiple namespaces
   include_tasks: gather_namespaces.yml
-  when: use_namespaces|string == 'all'
+  when: use_namespaces|string == 'all' and export_namespaces|bool == true
 
 - name: Operate on single namespace
   register: namespaces.stdout = {{ use_namespaces|string|required() }}
-  when: use_namespaces|string != 'all'
+  when: use_namespaces|string != 'all' and export_namespaces|bool == true
 
-- name: Backup namespaces
-  include_tasks: backup_namespaces.yml
-  when: backup_namespaces|bool == true
+- name: Export namespaces
+  include_tasks: export_namespaces.yml
+  when: export_namespaces|bool == true and import_namespaces|bool != true
 
-- name: Restore namespace contents
-  include_tasks: restore_namespaces.yml
-  when: restore_namespaces|bool == true
+- name: Import namespace contents
+  include_tasks: import_namespaces.yml
+  when: import_namespaces|bool == true and export_namespaces|bool != true
