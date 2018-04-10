@@ -1,0 +1,16 @@
+---
+- name: Copy test project definition
+  copy:
+    src: "{{ role_path }}/templates/sample-project.json"
+    dest: "{{ export_path }}/sample-project.json"
+
+- name: Create test project
+  shell: "oc create -f {{ export_path }}/sample-project.json"
+
+- name: Copy test project contents
+  copy:
+    src: "{{ role_path }}/templates/sample-containers.json"
+    dest: "{{ export_path }}/sample-containers.json"
+
+- name: Create contents of the project
+  shell: "oc create -f {{ export_path }}/sample-containers.json"

@@ -1,0 +1,3 @@
+---
+- name: Remove sample project
+  shell: oc delete project hello-openshift-project

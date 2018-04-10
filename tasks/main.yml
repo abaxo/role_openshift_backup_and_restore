@@ -15,3 +15,11 @@
 - name: Import namespace contents
   include_tasks: import_namespaces.yml
   when: import_namespaces|bool == true and export_namespaces|bool != true
+
+- name: Create test project
+  include_tasks: create_test_data.yml
+  when: remove_test_data|bool != true and create_test_data|bool == true and export_namespaces|bool != true and import_namespaces != true
+
+- name: Remove test project
+  include_tasks: remove_test_data.yml
+  when: remove_test_data|bool == true and create_test_data|bool != true and export_namespaces|bool != true and import_namespaces != true
